@@ -109,107 +109,51 @@ const questions: Question[] = [
   },
   {
     id: 7,
+    type: "true-false" as const,
     scene: "The Church of San Francisco",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kLbVBBRc4kRMBv3higmVJn24EX66h1.png",
-    question: "Where is the Church of San Francisco, associated with the legend of Cantuña, located?",
-    options: [
-      "Guayaquil, Ecuador",
-      "Cuenca, Ecuador",
-      "Quito, Ecuador",
-      "Bogotá, Colombia"
-    ],
-    correctAnswer: 2,
-    explanation: "The Church of San Francisco stands in the historic centre of Quito, Ecuador. It is one of the oldest and largest colonial churches in the Americas and is tied to the legend of Cantuña."
+    question: "The Church of San Francisco from the legend of Cantuña is located in Quito, Ecuador.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "true",
+    hint: "Think about the capital city of Ecuador.",
+    explanation: "True! The Church of San Francisco stands in the historic centre of Quito, Ecuador — one of the oldest and largest colonial churches in the Americas."
   },
   {
     id: 8,
+    type: "true-false" as const,
     scene: "Symbols in the Legend",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bZNWKtoY3UWf5UKiiD7rkzW87sMBC1.png",
-    question: "What does the legend of Cantuña represent in Ecuadorian culture?",
-    options: [
-      "The power of the Devil over humans",
-      "The ingenuity and resilience of Indigenous people",
-      "The superiority of colonial construction methods",
-      "The dangers of making promises"
-    ],
-    correctAnswer: 1,
-    explanation: "Cantuña's story is celebrated as a symbol of Indigenous cleverness and resilience — a humble stonemason who used his wits to outsmart a much more powerful supernatural foe."
+    question: "The legend of Cantuña represents the ingenuity and resilience of Indigenous people in Ecuadorian culture.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "true",
+    hint: "Who was Cantuña and what did he manage to do against the Devil?",
+    explanation: "True! Cantuña's story is celebrated as a symbol of Indigenous cleverness and resilience — a humble stonemason who used his wits to outsmart a supernatural foe."
   },
   {
     id: 9,
+    type: "true-false" as const,
     scene: "The Hidden Stone",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9YpADygvUk3rElgYB6IqsPXVRncC2P.png",
-    question: "What does the hidden stone in the legend symbolise?",
-    options: [
-      "Greed and corruption",
-      "Human wit and the power of a loophole",
-      "The weakness of the Devil",
-      "The strength of colonial architecture"
-    ],
-    correctAnswer: 1,
-    explanation: "The hidden stone is the heart of the legend — it symbolises that a single clever act, finding a loophole in an ironclad pact, can be more powerful than all the Devil's supernatural army."
+    question: "The hidden stone in the legend of Cantuña symbolises greed and corruption.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "false",
+    hint: "Think about why Cantuña hid the stone — was it for greed, or for cleverness?",
+    explanation: "False! The hidden stone symbolises human wit and the power of a loophole — a single clever act that was more powerful than all of the Devil's supernatural army."
   },
   {
     id: 10,
+    type: "true-false" as const,
     scene: "Legacy of Cantuña",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l4OkMobmuu6emlql1afEujqsyj1Fke.png",
-    question: "What element of the Church of San Francisco is traditionally associated with Cantuña's story?",
-    options: [
-      "Its golden altar",
-      "Its bell tower",
-      "The atrium and its stones",
-      "Its underground catacombs"
-    ],
-    correctAnswer: 2,
-    explanation: "The atrium of the Church of San Francisco and its carefully laid stones are traditionally linked to the legend. Locals say one stone was deliberately left out — Cantuña's eternal trick against the Devil."
-  },
-  {
-    id: 11,
-    type: "true-false" as const,
-    scene: "The Pact with the Devil",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-z19meFJuuad2fGEh9mWn5UPJQgXpod.png",
-    question: "Cantuña made a deal with the Devil to build the Church of San Francisco.",
-    options: [],
-    correctAnswer: 0,
-    correctText: "true",
-    hint: "Think about who helped Cantuña finish the church before dawn.",
-    explanation: "True! Cantuña made a desperate pact with the Devil to get supernatural help finishing the church at night."
-  },
-  {
-    id: 12,
-    type: "true-false" as const,
-    scene: "Cantuña's Identity",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-z19meFJuuad2fGEh9mWn5UPJQgXpod.png",
-    question: "Cantuña was a Spanish colonial governor who ordered the church to be built.",
+    question: "The bell tower of the Church of San Francisco is the element traditionally associated with Cantuña's story.",
     options: [],
     correctAnswer: 0,
     correctText: "false",
-    hint: "Cantuña was a working man with his hands, not a ruler.",
-    explanation: "False! Cantuña was an Indigenous Ecuadorian stonemason — a humble builder, not a Spanish governor."
-  },
-  {
-    id: 13,
-    type: "true-false" as const,
-    scene: "The Hidden Stone",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bijdYyd1ttc0ozSL5F6NYTc7QhIXPR.png",
-    question: "Cantuña saved his soul by hiding one stone so the church was never fully finished.",
-    options: [],
-    correctAnswer: 0,
-    correctText: "true",
-    hint: "What was Cantuña's clever trick against the Devil?",
-    explanation: "True! By hiding one stone, Cantuña made the church technically incomplete — so the Devil could not claim his soul."
-  },
-  {
-    id: 14,
-    type: "true-false" as const,
-    scene: "The Church Location",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kLbVBBRc4kRMBv3higmVJn24EX66h1.png",
-    question: "The Church of San Francisco from the legend is located in Guayaquil, Ecuador.",
-    options: [],
-    correctAnswer: 0,
-    correctText: "false",
-    hint: "The city in the legend is the capital of Ecuador.",
-    explanation: "False! The Church of San Francisco is located in Quito, the capital of Ecuador — not Guayaquil."
+    hint: "Think about where the stones of the church are most visible to visitors.",
+    explanation: "False! It is the atrium and its carefully laid stones that are traditionally linked to the legend. Locals say one stone was deliberately left out — Cantuña's eternal trick against the Devil."
   }
 ]
 
