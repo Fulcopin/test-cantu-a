@@ -5,16 +5,20 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { CheckCircle2, XCircle, ChevronRight, RotateCcw, Trophy, Sparkles } from "lucide-react"
+import { CheckCircle2, XCircle, ChevronRight, RotateCcw, Trophy, Sparkles, Lightbulb } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
 
 interface Question {
   id: number
   scene: string
   image: string
   question: string
+  type?: "multiple-choice" | "true-false"
   options: string[]
   correctAnswer: number
+  correctText?: string
+  hint?: string
   explanation: string
 }
 
@@ -158,6 +162,54 @@ const questions: Question[] = [
     ],
     correctAnswer: 2,
     explanation: "The atrium of the Church of San Francisco and its carefully laid stones are traditionally linked to the legend. Locals say one stone was deliberately left out — Cantuña's eternal trick against the Devil."
+  },
+  {
+    id: 11,
+    type: "true-false" as const,
+    scene: "The Pact with the Devil",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-z19meFJuuad2fGEh9mWn5UPJQgXpod.png",
+    question: "Cantuña made a deal with the Devil to build the Church of San Francisco.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "true",
+    hint: "Think about who helped Cantuña finish the church before dawn.",
+    explanation: "True! Cantuña made a desperate pact with the Devil to get supernatural help finishing the church at night."
+  },
+  {
+    id: 12,
+    type: "true-false" as const,
+    scene: "Cantuña's Identity",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-z19meFJuuad2fGEh9mWn5UPJQgXpod.png",
+    question: "Cantuña was a Spanish colonial governor who ordered the church to be built.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "false",
+    hint: "Cantuña was a working man with his hands, not a ruler.",
+    explanation: "False! Cantuña was an Indigenous Ecuadorian stonemason — a humble builder, not a Spanish governor."
+  },
+  {
+    id: 13,
+    type: "true-false" as const,
+    scene: "The Hidden Stone",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bijdYyd1ttc0ozSL5F6NYTc7QhIXPR.png",
+    question: "Cantuña saved his soul by hiding one stone so the church was never fully finished.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "true",
+    hint: "What was Cantuña's clever trick against the Devil?",
+    explanation: "True! By hiding one stone, Cantuña made the church technically incomplete — so the Devil could not claim his soul."
+  },
+  {
+    id: 14,
+    type: "true-false" as const,
+    scene: "The Church Location",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kLbVBBRc4kRMBv3higmVJn24EX66h1.png",
+    question: "The Church of San Francisco from the legend is located in Guayaquil, Ecuador.",
+    options: [],
+    correctAnswer: 0,
+    correctText: "false",
+    hint: "The city in the legend is the capital of Ecuador.",
+    explanation: "False! The Church of San Francisco is located in Quito, the capital of Ecuador — not Guayaquil."
   }
 ]
 
@@ -168,6 +220,8 @@ export default function CantuñaQuiz() {
   const [score, setScore] = useState(0)
   const [quizComplete, setQuizComplete] = useState(false)
   const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>(new Array(questions.length).fill(false))
+  const [typedAnswer, setTypedAnswer] = useState("")
+  const [showHint, setShowHint] = useState(false)
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return
@@ -175,14 +229,18 @@ export default function CantuñaQuiz() {
   }
 
   const handleSubmit = () => {
-    if (selectedAnswer === null) return
+    const q = questions[currentQuestion]
+    if (q.type === "true-false" && !typedAnswer.trim()) return
+    if (q.type !== "true-false" && selectedAnswer === null) return
     setShowResult(true)
     const newAnswered = [...answeredQuestions]
     newAnswered[currentQuestion] = true
     setAnsweredQuestions(newAnswered)
-    if (selectedAnswer === questions[currentQuestion].correctAnswer) {
-      setScore(score + 1)
-    }
+    const correct =
+      q.type === "true-false"
+        ? typedAnswer.trim().toLowerCase() === q.correctText?.toLowerCase()
+        : selectedAnswer === q.correctAnswer
+    if (correct) setScore(score + 1)
   }
 
   const handleNext = () => {
@@ -190,6 +248,8 @@ export default function CantuñaQuiz() {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedAnswer(null)
       setShowResult(false)
+      setTypedAnswer("")
+      setShowHint(false)
     } else {
       setQuizComplete(true)
     }
@@ -202,6 +262,8 @@ export default function CantuñaQuiz() {
     setScore(0)
     setQuizComplete(false)
     setAnsweredQuestions(new Array(questions.length).fill(false))
+    setTypedAnswer("")
+    setShowHint(false)
   }
 
   const progress = ((currentQuestion + (showResult ? 1 : 0)) / questions.length) * 100
@@ -258,7 +320,10 @@ export default function CantuñaQuiz() {
   }
 
   const question = questions[currentQuestion]
-  const isCorrect = selectedAnswer === question.correctAnswer
+  const isCorrect =
+    question.type === "true-false"
+      ? typedAnswer.trim().toLowerCase() === question.correctText?.toLowerCase()
+      : selectedAnswer === question.correctAnswer
 
   return (
     <div className="min-h-screen bg-background py-6 px-4">
@@ -302,57 +367,109 @@ export default function CantuñaQuiz() {
               {question.question}
             </h2>
 
-            {/* Options */}
-            <div className="space-y-3">
-              {question.options.map((option, index) => {
-                const isSelected = selectedAnswer === index
-                const isCorrectOption = index === question.correctAnswer
-                
-                let optionClass = "border-border hover:border-primary/50 hover:bg-secondary/50"
-                if (showResult) {
-                  if (isCorrectOption) {
-                    optionClass = "border-[color:var(--success)] bg-[color:var(--success)]/10"
-                  } else if (isSelected && !isCorrectOption) {
-                    optionClass = "border-destructive bg-destructive/10"
-                  }
-                } else if (isSelected) {
-                  optionClass = "border-primary bg-primary/10"
-                }
+            {/* Options or True/False Input */}
+            {question.type === "true-false" ? (
+              <div className="space-y-4">
+                {/* Badge */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/30">
+                    True / False
+                  </span>
+                  <span className="text-xs text-muted-foreground">— Type your answer below</span>
+                </div>
 
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showResult}
-                    className={cn(
-                      "w-full p-4 rounded-lg border-2 text-left transition-all duration-200",
-                      "flex items-center gap-3",
-                      optionClass,
-                      !showResult && "cursor-pointer",
-                      showResult && "cursor-default"
+                {/* Hint */}
+                {question.hint && !showResult && (
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowHint(!showHint)}
+                      className="gap-2"
+                    >
+                      <Lightbulb className="w-4 h-4" />
+                      {showHint ? "Hide Hint" : "Show Hint"}
+                    </Button>
+                    {showHint && (
+                      <div className="mt-2 p-3 bg-yellow-500/10 border border-yellow-500/40 rounded-lg">
+                        <p className="text-sm text-foreground">💡 {question.hint}</p>
+                      </div>
                     )}
-                  >
-                    <span className={cn(
-                      "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0",
-                      "border-2",
-                      showResult && isCorrectOption ? "border-[color:var(--success)] text-[color:var(--success)]" :
-                      showResult && isSelected && !isCorrectOption ? "border-destructive text-destructive" :
-                      isSelected ? "border-primary bg-primary text-primary-foreground" :
-                      "border-muted-foreground text-muted-foreground"
-                    )}>
-                      {showResult && isCorrectOption ? (
-                        <CheckCircle2 className="w-5 h-5" />
-                      ) : showResult && isSelected && !isCorrectOption ? (
-                        <XCircle className="w-5 h-5" />
-                      ) : (
-                        String.fromCharCode(65 + index)
+                  </div>
+                )}
+
+                {/* Text input */}
+                <div className="space-y-2">
+                  <label htmlFor="tf-input" className="text-sm text-muted-foreground font-medium">
+                    Write <strong className="text-foreground">True</strong> or <strong className="text-foreground">False</strong>:
+                  </label>
+                  <Input
+                    id="tf-input"
+                    value={typedAnswer}
+                    onChange={(e) => setTypedAnswer(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleSubmit() }}
+                    disabled={showResult}
+                    placeholder="Type: True or False"
+                    className={cn(
+                      "text-base",
+                      showResult && isCorrect && "border-[color:var(--success)] focus-visible:ring-[color:var(--success)]",
+                      showResult && !isCorrect && "border-destructive focus-visible:ring-destructive"
+                    )}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {question.options.map((option, index) => {
+                  const isSelected = selectedAnswer === index
+                  const isCorrectOption = index === question.correctAnswer
+
+                  let optionClass = "border-border hover:border-primary/50 hover:bg-secondary/50"
+                  if (showResult) {
+                    if (isCorrectOption) {
+                      optionClass = "border-[color:var(--success)] bg-[color:var(--success)]/10"
+                    } else if (isSelected && !isCorrectOption) {
+                      optionClass = "border-destructive bg-destructive/10"
+                    }
+                  } else if (isSelected) {
+                    optionClass = "border-primary bg-primary/10"
+                  }
+
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={showResult}
+                      className={cn(
+                        "w-full p-4 rounded-lg border-2 text-left transition-all duration-200",
+                        "flex items-center gap-3",
+                        optionClass,
+                        !showResult && "cursor-pointer",
+                        showResult && "cursor-default"
                       )}
-                    </span>
-                    <span className="text-foreground text-sm md:text-base">{option}</span>
-                  </button>
-                )
-              })}
-            </div>
+                    >
+                      <span className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0",
+                        "border-2",
+                        showResult && isCorrectOption ? "border-[color:var(--success)] text-[color:var(--success)]" :
+                        showResult && isSelected && !isCorrectOption ? "border-destructive text-destructive" :
+                        isSelected ? "border-primary bg-primary text-primary-foreground" :
+                        "border-muted-foreground text-muted-foreground"
+                      )}>
+                        {showResult && isCorrectOption ? (
+                          <CheckCircle2 className="w-5 h-5" />
+                        ) : showResult && isSelected && !isCorrectOption ? (
+                          <XCircle className="w-5 h-5" />
+                        ) : (
+                          String.fromCharCode(65 + index)
+                        )}
+                      </span>
+                      <span className="text-foreground text-sm md:text-base">{option}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
 
             {/* Explanation */}
             {showResult && (
@@ -364,8 +481,13 @@ export default function CantuñaQuiz() {
                   "font-semibold mb-2",
                   isCorrect ? "text-[color:var(--success)]" : "text-destructive"
                 )}>
-                  {isCorrect ? "Correct!" : "Incorrect!"}
+                  {isCorrect ? "✓ Correct!" : "✗ Incorrect!"}
                 </p>
+                {question.type === "true-false" && !isCorrect && (
+                  <p className="text-sm font-medium text-destructive mb-1">
+                    The correct answer was: <strong>{question.correctText}</strong>
+                  </p>
+                )}
                 <p className="text-foreground text-sm leading-relaxed">
                   {question.explanation}
                 </p>
@@ -377,7 +499,7 @@ export default function CantuñaQuiz() {
             {!showResult ? (
               <Button 
                 onClick={handleSubmit} 
-                disabled={selectedAnswer === null}
+                disabled={question.type === "true-false" ? !typedAnswer.trim() : selectedAnswer === null}
                 size="lg"
               >
                 Check Answer
